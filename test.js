@@ -40,7 +40,7 @@ casper.start('https://www.instagram.com/', function(){
          this.waitForSelector('a._5lote._pfo25._vbtk2', function(){
            //extracts all the links of the followers
            var followers = this.getElementsInfo('a._5lote._pfo25._vbtk2');
-           casper.echo(followers.length);
+           casper.echo(followers.length + " found followers");
            //puts all the urls into an array
            followers.forEach(function(element){
 
@@ -52,25 +52,48 @@ casper.start('https://www.instagram.com/', function(){
 
                 //only try to open picures if we are following that user
                 if (casper.exists(x('//*[@id="react-root"]/section/main/article/div[2]/h2'))){
-                   casper.echo("Visiting: " + handle + " - account is PRIVATE!\n");
+                   casper.echo("Visiting: " + handle.substring(1,handle.length-2) + " - account is PRIVATE!\n");
                 }
                 else{
+                    
                    casper.echo("Visiting: " + handle);
-                   //clicks on first picture
-                   casper.click(x('//*[@id="react-root"]/section/main/article/div/div[1]/div[1]/div[1]/a/div/div[2]'))
-                   //waits for comment button to signal that it is open
-                   casper.waitForSelector(x('//*[@id="react-root"]/section/main/div/div/article/div[2]/section[1]/a[2]/span'), function(){
-                      if (!casper.exists('span._soakw.coreSpriteHeartFull')){
-                        casper.wait(2000,function(){
-                          //casper.click('span._soakw.coreSpriteHeartOpen');
-                          casper.capture(handle.substring(1, handle.length - 2) + ".png");
-                          casper.echo("Liked a pic posted by " + handle + "\n");
-                        });
-                    }
+                   var photos = casper.getElementsInfo("a[href]");
+                   var photoURLS = [];
+                   
+                   //go thorugh first 3 photos
+                   photos.forEach(function(photo){
+                       photoURLS.push(photo.attributes.href);
+                   }); 
+
+                    //---------------------------------------
+                     var i = 0;
+                     var j = 0;
+
+                     //iterates over first three photos
+                     while(i<3){
+                         j++;
+                     if (photoURLS[j] === undefined) break;
+                     //makes sure link is a valid post
+                     if( photoURLS[j].substring(0,3) === "/p/"){
+                        i++;
+                        casper.thenOpen('https://www.instagram.com' + photoURLS[j]);
+                    
+                        //waits for comment button to click heart                          
+                        casper.waitForSelector(x('//*[@id="react-root"]/section/main/div/div/article/div[2]/section[1]/a[2]/span'), function(){
+                            if (!casper.exists('span._soakw.coreSpriteHeartFull')){
+                                casper.wait(2000,function(){
+                                   // casper.click('span._soakw.coreSpriteHeartOpen');
+                                    casper.capture(handle.substring(1, handle.length - 2) + i + ".png");
+                                    casper.echo("Liked a pic posted by " + handle + "\n");
+                                });
+                            }
                     else{
                       casper.echo("Already liked this pic!\n")
                     }
-                   });
+                   });      
+                     }
+                  }
+                    //-----end of block for if statement
                 }
               });
            });
