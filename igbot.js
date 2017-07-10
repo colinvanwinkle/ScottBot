@@ -40,16 +40,17 @@ casper.start('https://www.instagram.com/', function(){
            var followerURLS = [];
            //puts all the urls into an array
            followers.forEach(function(element){
-             followerURLS.push(element.attributes.href);
+             //visits each followers page
+             var handle = element.attributes.href
+              casper.thenOpen('https://www.instagram.com' + handle);
+              casper.wait(2000, function(){
+                casper.capture(handle.substring(1, handle.length - 2) + ".png");
+                casper.echo("Visiting: " + handle);
+              });
            });
 
-           //visits each followers page
-           for (i = 0; i < followerURLS.length; i ++){
-            casper.thenOpen('https://www.instagram.com' + followerURLS[i]);
-            casper.wait(2000, function(){
-              casper.capture(followerURLS[i] + ".png");
-            });
-          }
+
+
         });//end of block
 
 
