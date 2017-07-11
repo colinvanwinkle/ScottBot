@@ -18,7 +18,6 @@ casper.start('https://www.instagram.com/', function(){
    });
 
    
-
    //wait for homepage to load
    this.waitForSelector(x('//*[@id="react-root"]/section/nav/div[2]/div/div/div[2]/input'), function(){
      //click on profile
@@ -56,7 +55,7 @@ casper.start('https://www.instagram.com/', function(){
                 }
                 else{
                     
-                   casper.echo("Visiting: " + handle);
+                   casper.echo("Visiting: " + handle.substring(1,handle.length-2));
                    var photos = casper.getElementsInfo("a[href]");
                    var photoURLS = [];
                    
@@ -82,9 +81,9 @@ casper.start('https://www.instagram.com/', function(){
                         casper.waitForSelector(x('//*[@id="react-root"]/section/main/div/div/article/div[2]/section[1]/a[2]/span'), function(){
                             if (!casper.exists('span._soakw.coreSpriteHeartFull')){
                                 casper.wait(2000,function(){
-                                   // casper.click('span._soakw.coreSpriteHeartOpen');
-                                    casper.capture(handle.substring(1, handle.length - 2) + i + ".png");
-                                    casper.echo("Liked a pic posted by " + handle + "\n");
+                                    casper.click('span._soakw.coreSpriteHeartOpen');
+                                    //casper.capture(handle.substring(1, handle.length - 2) + i + ".png");
+                                    casper.echo("Liked a pic posted by " + handle.substring(1,handle.length-2) + "\n");
                                 });
                             }
                     else{
