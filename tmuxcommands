@@ -1,6 +1,8 @@
 tmux (starts new session)
-tmux a # (attached to #'d session)
+tmux a -t # (attached to #'d session)
+CTRL+B + D (exits/detaches from session)
 tmux kill-session -t <name> (kills session)
+
 
 tmux ls | grep : | cut -d. -f1 | awk '{print substr($1, 0, length($1)-1)}' | xargs kill
 
