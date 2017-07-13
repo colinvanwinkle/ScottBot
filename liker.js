@@ -29,11 +29,12 @@ casper.start('https://www.instagram.com/', function(){
 
        //scrolls to bottom of div
        for (i = 0; i < (casper.cli.args[2] / 10) * 1.5; i ++){
-	this.then(function(){
-       this.wait(300,function(){
-         this.scrollToBottom();
-        });
-	});
+         this.echo(i);
+	        this.then(function(){
+            this.wait(100,function(){
+              this.scrollToBottom();
+            });
+	     });
        }
 
 
