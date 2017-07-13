@@ -29,6 +29,9 @@ casper.start('https://www.instagram.com/', function(){
 
                 //scrolls to bottom of div
                 for (i = 0; i < (casper.cli.args[2] / 10); i ++){
+                  // casper.options.onResourceRequested = function(requestData, networkRequest) {
+                  //     casper.echo(JSON.stringify(networkRequest));
+                  // };
                 this.then(function(){
                         this.echo(i);
                         this.wait(250,function(){
