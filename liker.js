@@ -31,7 +31,7 @@ casper.start('https://www.instagram.com/', function(){
        for (i = 0; i < (casper.cli.args[2] / 10) * 1.5; i ++){
          this.echo(i);
 	        this.then(function(){
-            this.wait(100,function(){
+            this.wait(500,function(){
               this.scrollToBottom();
             });
 	     });
