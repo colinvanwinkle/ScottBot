@@ -8,18 +8,7 @@ casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
 var getUrl;
 
-var HttpClient = function() {
-    this.get = function(aUrl, aCallback) {
-        var anHttpRequest = new XMLHttpRequest();
-        anHttpRequest.onreadystatechange = function() {
-            if (anHttpRequest.readyState == 4 && anHttpRequest.status == 200)
-                aCallback(anHttpRequest.responseText);
-        }
 
-        anHttpRequest.open( "GET", aUrl, false );
-        anHttpRequest.send( null );
-    }
-}
 
 casper.start('https://www.instagram.com/', function(){
         //click on login
@@ -51,10 +40,7 @@ casper.start('https://www.instagram.com/', function(){
                     getUrl = getUrl.replace(getUrl.substring(getUrl.indexOf("first"), getUrl.indexOf("first") + 13),'first%22%3A5000');
                     getUrl = getUrl.substring(1,getUrl.length-1);
                     casper.echo(getUrl);
-                    var client = new HttpClient();
-                    client.get(getUrl, function(response) {
-                      casper.echo(response);
-                    });
+                    
                   }
 
                 };
