@@ -3,6 +3,9 @@ verbose: true,
 logLevel: 'warning'
 
 });
+
+casper.options.waitTimeout = 60000;
+
 var x = require('casper').selectXPath;
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
@@ -28,13 +31,14 @@ casper.start('https://www.instagram.com/', function(){
                 this.click(x('//*[@id="react-root"]/section/main/article/ul/li[2]/a'));
 
                 //scrolls to bottom of div
+                var j = 0;
                 for (i = 0; i < (casper.cli.args[2] / 10); i ++){
                   // casper.options.onResourceRequested = function(requestData, networkRequest) {
                   //     casper.echo(JSON.stringify(networkRequest));
                   // };
                 this.then(function(){
-                        this.echo(i);
-                        this.wait(250,function(){
+                        this.echo(++j);
+                        this.wait(1000,function(){
                                 this.scrollToBottom();
                                 });
                         });
