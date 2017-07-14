@@ -1,6 +1,11 @@
 var casper  = require('casper').create({
+pageSettings: {
+        loadImages:  false,        // The WebPage instance used by Casper will
+        loadPlugins: false         // use these settings
+    },
+
 verbose: true,
-logLevel: 'warning'
+logLevel: 'info'
 
 });
 
@@ -38,7 +43,7 @@ casper.start('https://www.instagram.com/', function(){
                   // };
                 this.then(function(){
                         this.echo(++j);
-                        this.wait(1000,function(){
+                        this.wait(300,function(){
                                 this.scrollToBottom();
                                 });
                         });
