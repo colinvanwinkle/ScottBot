@@ -6,9 +6,8 @@ logLevel: 'warning'
 var x = require('casper').selectXPath;
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
 
-var getUrl;
 
-
+var getUrl = 'uninitialized'
 
 casper.start('https://www.instagram.com/', function(){
         //click on login
@@ -39,10 +38,7 @@ casper.start('https://www.instagram.com/', function(){
                     getUrl = JSON.stringify(networkRequest.url);
                     getUrl = getUrl.replace(getUrl.substring(getUrl.indexOf("first"), getUrl.indexOf("first") + 13),'first%22%3A5000');
                     getUrl = getUrl.substring(1,getUrl.length-1);
-                    casper.echo(getUrl);
-                    
                   }
-
                 };
 
                 this.then(function(){
@@ -51,6 +47,27 @@ casper.start('https://www.instagram.com/', function(){
                     this.scrollToBottom();
                   });
               });
+
+                this.then(function(){
+
+               if (getUrl != 'uninitialized'){
+                var res = this.evaluate(function(getUrl){
+                  return __utils__.sendAJAX(getUrl, 'GET', null, false);
+                }, {getUrl: getUrl});
+
+                  followersData = JSON.parse(res);
+
+                  //casper.echo(JSON.stringify(followersData.data.user.edge_followed_by.edges));
+
+                  var followerHandles = [];
+                  followersData.data.user.edge_followed_by.edges.forEach(function(elem){
+                    followerHandles.push(elem.node.username);
+                  });
+                  casper.echo(followerHandles);
+
+                }
+              });
+
             }
 
 
