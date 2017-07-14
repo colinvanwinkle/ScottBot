@@ -36,7 +36,7 @@ casper.start('https://www.instagram.com/', function(){
                 casper.options.onResourceRequested = function(requestData, networkRequest) {
                   if (networkRequest.url.indexOf("graphql") !== -1){
                     getUrl = JSON.stringify(networkRequest.url);
-                    getUrl = getUrl.replace(getUrl.substring(getUrl.indexOf("first"), getUrl.indexOf("first") + 13),'first%22%3A5000');
+                    getUrl = getUrl.replace(getUrl.substring(getUrl.indexOf("first"), getUrl.indexOf("first") + 13),'first%22%3A100');
                     getUrl = getUrl.substring(1,getUrl.length-1);
                   }
                 };

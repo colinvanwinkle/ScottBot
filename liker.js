@@ -5,11 +5,14 @@ pageSettings: {
     },
 
 verbose: true,
-logLevel: 'info'
+logLevel: 'warning'
 
 });
 
 casper.options.waitTimeout = 60000;
+var followerHandles = [];
+var getUrl = 'uninitialized'
+
 
 var x = require('casper').selectXPath;
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
@@ -35,31 +38,54 @@ casper.start('https://www.instagram.com/', function(){
                 //click on followers
                 this.click(x('//*[@id="react-root"]/section/main/article/ul/li[2]/a'));
 
-                //scrolls to bottom of div
-                var j = 0;
-                for (i = 0; i < (casper.cli.args[2] / 10); i ++){
-                  // casper.options.onResourceRequested = function(requestData, networkRequest) {
-                  //     casper.echo(JSON.stringify(networkRequest));
-                  // };
-                this.then(function(){
-                        this.echo(++j);
-                        this.wait(300,function(){
-                                this.scrollToBottom();
-                                });
-                        });
-                }
+                for (i = 0; i < 2; i ++){
+                  casper.options.onResourceRequested = function(requestData, networkRequest) {
+                    if (networkRequest.url.indexOf("graphql") !== -1){
+                      getUrl = JSON.stringify(networkRequest.url);
+                      getUrl = getUrl.replace(getUrl.substring(getUrl.indexOf("first"), getUrl.indexOf("first") + 13),'first%22%3A100');
+                      getUrl = getUrl.substring(1,getUrl.length-1);
+                    }
+                  };
+
+                  this.then(function(){
+                    this.echo(i);
+                    this.wait(250,function(){
+                      this.scrollToBottom();
+                    });
+                });
+
+                  this.then(function(){
+
+                 if (getUrl != 'uninitialized'){
+                  var res = this.evaluate(function(getUrl){
+                    return __utils__.sendAJAX(getUrl, 'GET', null, false);
+                  }, {getUrl: getUrl});
+
+                    followersData = JSON.parse(res);
+
+                    //casper.echo(JSON.stringify(followersData.data.user.edge_followed_by.edges));
+
+
+                    followersData.data.user.edge_followed_by.edges.forEach(function(elem){
+                      followerHandles.push(elem.node.username);
+                    });
+                    casper.echo(followerHandles);
+
+                  }
+                });
+
+              }
 
 
                 //waits for follower list to show up
-                this.waitForSelector('a._5lote._pfo25._vbtk2', function(){
+                this.then(function(){
                     //extracts all the links of the followers
-                    var followers = this.getElementsInfo('a._5lote._pfo25._vbtk2');
-                    casper.echo(followers.length + " found followers");
+                    casper.echo(followerHandles.length + " found followers");
                     //puts all the urls into an array
-                    followers.forEach(function(element){
+                    followerHandles.forEach(function(element){
 
-                            var handle = element.attributes.href
-                            casper.thenOpen('https://www.instagram.com' + handle);
+                            var handle = element;
+                            casper.thenOpen('https://www.instagram.com/' + handle + '/');
 
                             //waits 2 seconds when opening another persons instagram
                             casper.waitForText(handle.substring(1, handle.length - 2), function(){
