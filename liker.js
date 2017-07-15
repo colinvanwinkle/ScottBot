@@ -42,7 +42,7 @@ casper.start('https://www.instagram.com/', function(){
                   casper.options.onResourceRequested = function(requestData, networkRequest) {
                     if (networkRequest.url.indexOf("graphql") !== -1){
                       getUrl = JSON.stringify(networkRequest.url);
-                      getUrl = getUrl.replace(getUrl.substring(getUrl.indexOf("first"), getUrl.indexOf("first") + 13),'first%22%3A100');
+                      getUrl = getUrl.replace(getUrl.substring(getUrl.indexOf("first"), getUrl.indexOf("first") + 13),'first%22%3A3000');
                       getUrl = getUrl.substring(1,getUrl.length-1);
                     }
                   };
@@ -70,6 +70,7 @@ casper.start('https://www.instagram.com/', function(){
                       followerHandles.push(elem.node.username);
                     });
                     casper.echo(followerHandles);
+                    //followersData = [];
 
                   }
                 });
