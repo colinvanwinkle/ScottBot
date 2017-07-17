@@ -1,6 +1,6 @@
 var casper  = require('casper').create({
 pageSettings: {
-        loadImages:  false,        // The WebPage instance used by Casper will
+        loadImages:  true,        // The WebPage instance used by Casper will
         loadPlugins: false         // use these settings
     },
 
@@ -12,7 +12,6 @@ logLevel: 'warning'
 casper.options.waitTimeout = 60000;
 var followerHandles = [];
 var getUrl = 'uninitialized'
-
 
 var x = require('casper').selectXPath;
 casper.userAgent('Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)');
@@ -70,7 +69,7 @@ casper.start('https://www.instagram.com/', function(){
                       followerHandles.push(elem.node.username);
                     });
                     casper.echo(followerHandles);
-                    //followersData = [];
+                    followersData = [];
 
                   }
                 });
@@ -132,11 +131,15 @@ casper.start('https://www.instagram.com/', function(){
                                                     casper.echo("Already liked this pic!\n")
                                                     }
                                                     });
+
                                         }
+
                                     }
                                     //-----end of block for if statement
                                     }
                             });
+
+
                     });
                 });//end of block
 
