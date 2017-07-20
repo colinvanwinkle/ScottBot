@@ -88,15 +88,15 @@ casper.start('https://www.instagram.com/', function(){
                             casper.thenOpen('https://www.instagram.com/' + handle + '/');
 
                             //waits 2 seconds when opening another persons instagram
-                            casper.waitForText(handle.substring(1, handle.length - 2), function(){
+                            casper.waitForText(handle, function(){
 
                                     //only try to open picures if we are following that user
                                     if (casper.exists(x('//*[@id="react-root"]/section/main/article/div[2]/h2'))){
-                                    casper.echo("Visiting: " + handle.substring(1,handle.length-2) + " - account is PRIVATE!\n");
+                                    casper.echo("Visiting: " + handle + " - account is PRIVATE!\n");
                                     }
                                     else{
 
-                                    casper.echo("Visiting: " + handle.substring(1,handle.length-2));
+                                    casper.echo("Visiting: " + handle);
                                     var photos = casper.getElementsInfo("a[href]");
                                     var photoURLS = [];
 
@@ -119,7 +119,7 @@ casper.start('https://www.instagram.com/', function(){
                                             casper.thenOpen('https://www.instagram.com' + photoURLS[j]);
 
                                             //waits for comment button to click heart
-                                            casper.waitForSelector(x('//*[@id="react-root"]/section/main/div/div/article/div[2]/section[1]/a[2]/span'), function(){
+                                            casper.waitForSelector('img._a012k', function(){
                                                     if (!casper.exists('span._soakw.coreSpriteHeartFull')){
                                                     casper.wait(34000,function(){
                                                             casper.click('span._soakw.coreSpriteHeartOpen');
@@ -137,7 +137,7 @@ casper.start('https://www.instagram.com/', function(){
                                     }
                                     //-----end of block for if statement
                                     }
-                            });
+                            }, function(){this.echo("Profile no longer active");});
 
 
                     });
