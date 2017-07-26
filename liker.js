@@ -62,8 +62,8 @@ casper.start('https://www.instagram.com/', function(){
 
                     followersData = JSON.parse(res);
 
-                    //casper.echo(JSON.stringify(followersData.data.user.edge_followed_by.edges));
-
+                    //I think this is pushing all the users twice sometimes, add if statement to protect from
+                    //this in fturue
 
                     followersData.data.user.edge_followed_by.edges.forEach(function(elem){
                       followerHandles.push(elem.node.username);
@@ -121,7 +121,7 @@ casper.start('https://www.instagram.com/', function(){
                                             //waits for comment button to click heart
                                             casper.waitForSelector('img._a012k', function(){
                                                     if (!casper.exists('span._soakw.coreSpriteHeartFull')){
-                                                    casper.wait(34000,function(){
+                                                    casper.wait(20000,function(){
                                                             casper.click('span._soakw.coreSpriteHeartOpen');
                                                             //casper.capture(handle.substring(1, handle.length - 2) + i + ".png");
                                                             casper.echo("Liked a pic posted by " + handle.substring(1,handle.length-2) + "\n");
